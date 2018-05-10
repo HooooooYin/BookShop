@@ -9,19 +9,26 @@ class SearchUser extends React.Component{
     }
     
   render(){
-    if((typeof(this.props.data.result) !== 'undefined') && (typeof(this.props.data.result.user) !== 'undefined')){
+    if((typeof(this.props.data) !== 'undefined') && (typeof(this.props.data.result) !== 'undefined')){
       return(
         <div>
           <img src={require('../images/searchuser.png')}   className = "searchtitle" />
           <div className="searchpage" >
-            <UserItem results = {this.props.data.result.user} />
+          {this.props.data.result.length === 0?
+              <div className = "not_found" >
+                <img src={require('../images/notfound.png')} alt=""/>
+                <p>查不到相关信息</p>
+              </div> : <UserItem results = {this.props.data.result} />
+          }
           </div>
         </div>
         
       );
     }
     else{
-      return null;
+      return <div className = "loading" >
+          <img src={require('../images/loading.png')}/>
+        </div>
     }
   }
 }

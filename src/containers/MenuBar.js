@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {UserBar} from '../components/UserBar'
-import {SortBar} from '../components/SortBar'
+import SortBar from '../components/SortBar'
 import SearchBar from '../components/SearchBar'
 import '../index.css'
 import { set_register, set_login, SET_LOGIN, SET_REGISTER } from '../actions'
@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import {mapDispatchToProps} from '../store'
 import LoginDialog from '../components/LoginDialog'
 import {RegisterDialog} from '../components/RegisterDialog'
+import ModifyDialog from '../components/ModifyDialog'
 
 class MenuBar extends React.Component{
     render(){
@@ -38,7 +39,24 @@ class MenuBar extends React.Component{
             <div className="menubar">
               <UserBar username = {this.props.user.user_name} 
               onLogin = {this.props.onLogin.bind(this,true)}
-              onRegister = {this.props.onRegister.bind(this, true)} />
+              onRegister = {this.props.onRegister.bind(this, true)}  />
+              <SearchBar />
+              <SortBar />
+            </div>
+          </div>
+        );}
+        if(this.props.modify){
+          return(
+            <div>
+              <ModifyDialog 
+                onUsername = {this.handleUserName}
+                onModify = {this.props.onModify.bind(this)}
+                setUser = {this.props.setUser.bind(this)}  />
+            <div className="menubar">
+              <UserBar username = {this.props.user.user_name} 
+              onLogin = {this.props.onLogin.bind(this,true)}
+              onRegister = {this.props.onRegister.bind(this, true)} 
+              onCancel = {this.props.onCancel.bind(this)} />
               <SearchBar />
               <SortBar />
             </div>
@@ -48,7 +66,9 @@ class MenuBar extends React.Component{
           <div className="menubar">
               <UserBar username = {this.props.user.user_name} 
               onLogin = {this.props.onLogin.bind(this,true)}
-              onRegister = {this.props.onRegister.bind(this, true)} />
+              onRegister = {this.props.onRegister.bind(this)}
+              onModify = {this.props.onModify.bind(this, true)}
+              onCancel = {this.props.onCancel.bind(this)} />
               <SearchBar />
               <SortBar />
             </div>
@@ -59,6 +79,7 @@ class MenuBar extends React.Component{
     return{
       login: state.login,
       register: state.register,
+      modify: state.modify,
       user: state.user
     }
   }

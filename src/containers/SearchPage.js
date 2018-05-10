@@ -10,20 +10,27 @@ class SearchPage extends React.Component{
   }
 
   render(){
-    if((typeof(this.props.data.result) !== 'undefined') && (typeof(this.props.data.result.search_book) !== 'undefined')){
+    if((typeof(this.props.data) !== 'undefined') && (typeof(this.props.data.result) !== 'undefined') && (typeof(this.props.data.recommend_book) !== 'undefined')){
       return(
         <div>
           <img src={require('../images/searchbook.png')} className = "searchtitle" />
           <div className="searchpage" >
-            <BookList results = {this.props.data.result.search_book} />
-            <HotList title = '为您推荐' images = {this.props.data.result.recommend_book} />
+            {this.props.data.result.length === 0?
+              <div className = "not_found" >
+                <img src={require('../images/notfound.png')} alt=""/>
+                <p>查不到相关信息</p>
+              </div> : <BookList results = {this.props.data.result} />
+            }
+            {this.props.token === ""? null : <HotList title = '为您推荐' images = {this.props.data.recommend_book} />}
           </div>
         </div>
         
       );
     }
     else{
-      return null;
+      return <div className = "loading" >
+        <img src={require('../images/loading.png')}/>
+      </div>
     }
   }
 }
@@ -32,7 +39,8 @@ function select(state){
   return{
     search_url: state.search_url,
     search_params: state.search_params,
-    data: state.data
+    data: state.data,
+    token: state.user.token
   }
 }
 

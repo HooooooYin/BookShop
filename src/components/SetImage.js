@@ -2,27 +2,18 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import '../index.css'
+import { uploadImage } from '../store';
+import {connect} from 'react-redux'
 
-export class SetImage extends React.Component{
+class SetImage extends React.Component{
     constructor(props){
       super(props);
       this.handleChange = this.handleChange.bind(this);
-  
     }
     handleChange(){
       let upload = document.getElementById('upload');
       let image = upload.files[0];
-      let formdata = new FormData();
-      let show = document.getElementById('imageshow');
-      formdata.append('smfile', image);
-      axios.post('https://sm.ms/api/upload', formdata).then((res) => {
-        if(res.data.code === 'success'){
-          this.props.onImageChange(res.data.data.url);
-        }
-        else{
-          alert(res.data.msg);
-        }
-      })
+      this.props.uploadIcon(image, this.props.token)
   
     }
     render(){
@@ -35,3 +26,11 @@ export class SetImage extends React.Component{
       );
     }
   }
+  function select(state){
+    return{
+      upload_url: state.upload_url,
+      token: state.user.token
+    }
+  }
+
+  export default connect(select, uploadImage)(SetImage)

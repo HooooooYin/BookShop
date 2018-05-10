@@ -5,6 +5,8 @@ import store from './store'
 import { BrowserRouter } from 'react-router-dom'
 import {Provider} from 'react-redux'
 import {APP} from './routers/APP'
+import {saveState} from './localStorage'
+
 
 ReactDOM.render(
   <Provider store={store}>
@@ -15,3 +17,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+window.onbeforeunload = (e) => {
+  const state = store.getState();
+  saveState(state);
+};

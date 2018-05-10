@@ -11,8 +11,7 @@ class OrderList extends React.Component{
   }
 
   confirm(bookid, index){
-    console.log('onclick', bookid, index)
-    this.props.confirmOrder(bookid, this.props.score, index);
+    this.props.confirmOrder(bookid, this.props.score, index, this.props.token);
   }
 
   render(){
@@ -42,7 +41,8 @@ class OrderList extends React.Component{
 
 function select(state){
   return{
-    score: state.score
+    score: state.score,
+    token: state.user.token
   }
 }
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import axios from 'axios'
 import '../index.css'
 import { UploadBook } from '../store';
 import {connect} from 'react-redux'
@@ -13,7 +12,7 @@ class SetImages extends React.Component{
     handleChange(){
       let upload = document.getElementById('uploads');
       let images = upload.files;
-      this.props.uploadUrl(images);
+      this.props.uploadUrl(images, this.props.token);
     }
     render(){
       return(
@@ -27,7 +26,8 @@ class SetImages extends React.Component{
 
   function select(state){
     return{
-      url: state.upload_url
+      url: state.upload_url,
+      token: state.user.token
     }
   }
 

@@ -10,10 +10,12 @@ export class BookList extends React.Component{
           {this.props.results.map((result) => {
             return(
               <li key = {result.book_id}>
-                <img src = {result.photo_url} />
+                <div>
+                  <img src = {result.photo_url} />
+                </div>
                 <p>
                   <Link to = {`../books/${result.book_id}`}>{result.book_title}</Link>
-                  <span>{result.book_price}</span>
+                  <span>价格：{result.book_price}</span>
                 </p>
               </li>
             );

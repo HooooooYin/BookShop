@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { setShow } from '../store'
 import {Link} from 'react-router-dom'
 
+
 class ImageSlider extends React.Component{
     constructor(props){
       super(props);
@@ -40,8 +41,8 @@ class ImageSlider extends React.Component{
           {(this.props.images || []).map((image, index) => {
             if(typeof(image) !== 'undefined') {
               return(
-                <Link to = {`/books/${image.book_id}`} key = {image.book_id}>
-                  <img src={image.photo_url} className = {this.props.show[index]} />
+                <Link to = {`/books/${image.book_id}`} key = {image.book_id}   >
+                  <img src={image.photo_url} className = {this.props.show[index]}/>
                 </Link>
               );
             }

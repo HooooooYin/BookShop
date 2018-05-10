@@ -12,7 +12,7 @@ import SearchUser from '../containers/SearchUser'
 
 const Main = () => (
     <main>
-        <Switch>
+        <Switch>    
             <Route exact path = '/' component = {MainPage}/>
             <Route path = '/books/search_result' component = {SearchPage} />
             <Route path = '/users/search_result' component = {SearchUser} />

@@ -33,6 +33,10 @@ export class UserBar extends React.Component{
               <Link to = "/users/information" className="shopping" >个人中心</Link>
               {'  '}
               <Link to = "/books" className="shopping" >上架书籍</Link>
+              {'  '}
+              <a href="#" onClick = {this.props.onModify} >修改密码</a>
+              {'  '}
+              <a href="#" onClick = {this.props.onCancel} >撤销</a>
             </p>
           </div>
         );

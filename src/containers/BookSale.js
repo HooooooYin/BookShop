@@ -17,18 +17,18 @@ class BookSale extends React.Component{
       let name = document.getElementById('book_name_sale').value;
       let price = document.getElementById('book_price_sale').value;
       let description = document.getElementById('description_sale').value;
-      let book = {
+      axios.defaults.headers['Authorization'] = `token:${this.props.user.token}`;
+      axios.post('/bookshop/books', {
         token: this.props.user.token,
         book_title: title,
         book_name: name,
         book_price: price,
-        description: description,
+        book_description: description,
         book_pic: this.props.url
-      }
-      axios.post('/books', book).then((res) => {
-        if(res.data.error_code === 200){
-          this.props.updateToken(res.data.upload.token)
-          this.props.history.push(`/books/${res.data.upload.book_id}`)
+      }).then((res) => {
+        if(res.status === 200){
+          this.props.updateToken(res.data.token)
+          this.props.history.push(`/books/${res.data.book_id}`)
         }
         else{
           alert(res.data.message)

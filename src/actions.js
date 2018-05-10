@@ -1,5 +1,6 @@
 export const SET_LOGIN = 'SET_LOGIN'
 export const SET_REGISTER = 'SET_REGISTER'
+export const SET_MODIFY = 'SET_MODIFY'
 export const SLIDER_SHOW = 'SLIDER_SHOW'
 export const SET_PRESENT = 'SET_PRESENT'
 export const SET_BOOKON = 'SET_BOOKON'
@@ -18,6 +19,8 @@ export const UPLOAD_URL = 'UPLOAD_URL'
 export const URL_INIT = 'URL_INIT'
 export const SET_BOOK_SHOW = 'SET_BOOK_SHOW'
 export const UPDATE_COMMENT = 'UPDATE_COMMENT'
+export const UPLOAD_IMAGE = 'UPLOAD_IMAGE'
+export const CANCEL_USER = 'CANCEL_USER'
 
 export function set_login(login){
     return {type:SET_LOGIN, login}
@@ -25,6 +28,10 @@ export function set_login(login){
 
 export function set_register(register){
     return {type:SET_REGISTER, register}
+}
+
+export function set_modify(modify){
+    return {type:SET_MODIFY, modify}
 }
 
 export function slider_show(index){
@@ -97,4 +104,12 @@ export function set_book_show(src){
 
 export function updateComment(comment, page_num){
     return {type:UPDATE_COMMENT, comment, page_num}
+}
+
+export function uploadImage(image){
+    return {type: UPLOAD_IMAGE, image}
+}
+
+export function cancelUser(){
+    return {type:CANCEL_USER}
 }

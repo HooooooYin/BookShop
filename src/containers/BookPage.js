@@ -16,12 +16,14 @@ class BookPage extends React.Component{
     }
 
   componentWillMount(){
-    this.props.bookRequest(this.props.match.params.book_id);
+    this.props.bookRequest(this.props.match.params.book_id, this.props.token);
   }
   handleSubmit(){
+    console.log('handleSubmit')
     let text = document.getElementById('comment_text').value;
     let time = new Date().toLocaleDateString()+ "  "+new Date().toLocaleTimeString()
-    this.props.comment(this.props.token, this.props.match.params.book_id, text, 0, time)
+    this.props.comment(this.props.token, this.props.match.params.book_id, text, 0, time, this.props.data.page_num)
+    document.getElementById('comment_text').value = null;
   }
 
   buyBook(){
@@ -37,12 +39,11 @@ class BookPage extends React.Component{
   }
 
   onChange(e){
-    console.log(e.target.src)
     this.props.setBookShow(e.target.src)
   }
 
   render(){ 
-    if((typeof(this.props.data) !== 'undefined')  && (typeof(this.props.data.book) !== 'undefined')){ 
+    if((typeof(this.props.data) !== 'undefined') && (typeof(this.props.data.book_pic) !== 'undefined') && (typeof(this.props.data.comment) !== 'undefined')){ 
       return(
         <div>
           <div className = "bookpage" >
@@ -52,7 +53,7 @@ class BookPage extends React.Component{
             </div>
             <ul>
               {
-                this.props.data.book.book_pic.map((image, index) => {
+                this.props.data.book_pic.map((image, index) => {
                 return(
                     <li key = {index} className = {this.props.bookshow[index]}  value = {index} onClick = {this.onChange} >
                       <img src = {image.photo_url}  /> 
@@ -62,27 +63,29 @@ class BookPage extends React.Component{
             </ul>
             </div>
             <div className = "bookdetail" >
-              <h1>{this.props.data.book.book_title}</h1>
-              <h2>{this.props.data.book.book_name}</h2>
-              <Link to = {`/users/${this.props.data.book.book_user_id}`} >卖家： {this.props.data.book.book_user_name}</Link>
-              <p>价格: {this.props.data.book.book_price} </p>
+              <h1>{this.props.data.book_title}</h1>
+              <h2>{this.props.data.book_name}</h2>
+              <Link to = {`/users/${this.props.data.book_user_id}`} >卖家： {this.props.data.book_user_name}</Link>
+              <p>价格: {this.props.data.book_price} </p>
               <button onClick = {this.buyBook} >购买</button>
               <button onClick = {this.saveBook} >收藏</button>
               <div className="description" >
-                描述:{this.props.data.book.description}
+                描述:{this.props.data.book_description}
               </div>
             </div>
           </div>
-          {
-            this.props.data.book.book_comments.map((comment, index) => {
-            return(
-              <Comment user = {comment.user_name} text = {comment.text} key = {index} user_id = {comment.user_id} time = {comment.time} />
-            )
-          })}
-          <p className = "page" >
-            {this.props.data.book.page_num === 1 ? <button  >首页</button> : <button onClick = {() => this.getComment(this.props.data.book.page_num - 1) } >上一页</button>}
-            <button onClick = {() => this.getComment(this.props.data.book.page_num + 1) } >下一页</button>
-          </p>
+          <div className = "comment_page" >
+            {
+              this.props.data.comment.map((comment, index) => {
+              return(
+                <Comment user = {comment.user_name} text = {comment.text} key = {index} user_id = {comment.user_id} time = {comment.time} />
+              )
+            })}
+            <p className = "page" >
+              {this.props.data.page_num === 1 ? <button  >首页</button> : <button onClick = {() => this.getComment(this.props.data.page_num - 1) } >上一页</button>}
+              <button onClick = {() => this.getComment(this.props.data.page_num + 1) } >下一页</button>
+            </p>
+          </div>
         <div className = "discuss" >
         <textarea name="discussion" id = "comment_text" cols="120" rows="10" placeholder = "留言..." ></textarea>
         <button type="submit" onClick = {this.handleSubmit} >发表</button>
@@ -90,7 +93,11 @@ class BookPage extends React.Component{
         </div>
       );
     }
-    else return null;
+    else {
+      return <div className = "loading" >
+          <img src={require('../images/loading.png')}/>
+        </div>
+      }
   }
 }
 

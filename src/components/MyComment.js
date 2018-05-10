@@ -6,11 +6,11 @@ export class MyComment extends React.Component{
     render(){
         return(
             <div>
-                {this.props.comments.map((comment) => {
+                {this.props.comments.map((comment, index) => {
                 return(     
-                    <div className = "mycomment" >
-                        <Link to = {`/books/${comment.book_id}`} key = {comment.book_id} >
-                            <p>{`我在${comment.book_title}下的留言：`}</p>
+                    <div className = "mycomment" key = {index} >
+                        <Link to = {`/books/${comment.book_id}`}  >
+                            <p>我在<span>{comment.book_title}</span>下的留言：</p>
                             <br/>
                             <p>{comment.text}</p>
                         </Link>

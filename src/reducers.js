@@ -1,4 +1,4 @@
-import {SET_LOGIN, SET_REGISTER, SLIDER_SHOW, SET_PRESENT, set_present, SET_BOOKON, GET_SUCCESS, GET_FAILED, SET_USER, SET_LISTON, SET_SEARCH, GET_SEARCH_PARAMS, SET_SCORE, CONFIRM_SUCCESS, confirmSuccess, UPDATE_TOKEN, UPDATE_INFO, UPLOAD_URL, URL_INIT, SET_BOOK_SHOW, UPDATE_COMMENT} from './actions'
+import {SET_LOGIN, SET_REGISTER, SLIDER_SHOW, SET_PRESENT, set_present, SET_BOOKON, GET_SUCCESS, GET_FAILED, SET_USER, SET_LISTON, SET_SEARCH, GET_SEARCH_PARAMS, SET_SCORE, CONFIRM_SUCCESS, confirmSuccess, UPDATE_TOKEN, UPDATE_INFO, UPLOAD_URL, URL_INIT, SET_BOOK_SHOW, UPDATE_COMMENT, UPLOAD_IMAGE, CANCEL_USER, SET_MODIFY} from './actions'
 import {combineReducers} from 'redux'
 import _ from 'lodash'
 
@@ -15,6 +15,15 @@ function setRegister(state = false, action){
     switch(action.type){
         case SET_REGISTER:
             return _.cloneDeep(action.register)
+        default:
+            return state
+    }
+}
+
+function setModify(state = false, action){
+    switch(action.type){
+        case SET_MODIFY:
+            return _.cloneDeep(action.modify)
         default:
             return state
     }
@@ -78,29 +87,23 @@ function getdata(state = {}, action){
             return _.cloneDeep(action.error)
         case CONFIRM_SUCCESS:
             return Object.assign({}, state, {
-                user : Object.assign({}, state.user, {
-                    order_book: state.user.order_book.map((order, index) => {
-                        if(index === action.index){
-                            return Object.assign({}, order, {
-                                order_status: "sold"
-                            })
-                        }
-                        return order
-                    })
-                })
+                order_book: state.order_book.map((order, index) => {
+                    if(index === action.index){
+                        return Object.assign({}, order, {
+                            order_status: "sold"
+                        })
+                    }
+                    return order
+                }) 
             })
         case UPDATE_INFO:
             return Object.assign({}, state, {
-                user: Object.assign({}, state.user, {
-                    information: action.info
-                })
+                information: action.info
             })
         case UPDATE_COMMENT:
             return Object.assign({}, state, {
-                book: Object.assign({}, state.book, {
-                    book_comments: [...action.comment],
-                    page_num: Object.assign({}, action.page_num)
-                })
+                comment: _.cloneDeep(action.comment),
+                page_num: _.cloneDeep(action.page_num)
             })
         default:
             return state
@@ -115,6 +118,8 @@ function setUser(state = {}, action){
             return Object.assign({}, state, {
                 token: action.token
             })
+        case CANCEL_USER:
+            return _.cloneDeep({})
         default:
             return state
     }
@@ -148,7 +153,7 @@ function setSearch(state= '/books/search_result', action){
 function getSearchParams(state = {}, action){
     switch(action.type){
         case GET_SEARCH_PARAMS:
-            return _.cloneDeep(action.params)
+            return Object.assign({}, action.params)
         default:
             return state
     }
@@ -171,6 +176,8 @@ function uploadUrl(state = [], action){
             return _.cloneDeep([])
         case UPLOAD_URL:
             return [...state, action.url]
+        case UPLOAD_IMAGE:
+            return _.cloneDeep(action.image)
         default:
             return state
     }
@@ -188,6 +195,7 @@ function setBookShow(state = '', action){
 const userState = combineReducers({
     login: setLogin,
     register: setRegister,
+    modify: setModify,
     show: sliderShow,
     present: setPresent,
     bookon: setBookOn,

@@ -2,6 +2,17 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
+  "proxy":{
+    "/bookshop": {
+      "target":"http://localhost",
+      "changeOrigin": true
+    },
+    "/api/upload": {
+      "target" : "https://sm.ms",
+      "changeOrigin": true
+    }
+  },
   "dependencies": {
     "mockjs": "^1.0.1-beta3",
     "react": "^16.2.0",

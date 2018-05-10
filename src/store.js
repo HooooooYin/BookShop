@@ -1,11 +1,13 @@
 import {createStore, applyMiddleware, compose} from 'redux'
 import userState from './reducers'
-import { SET_LOGIN, SET_REGISTER, SLIDER_SHOW, SET_PRESENT, SET_BOOKON, SET_BOOKNOW, SET_USER, SET_LISTON, SET_SEARCH, GET_SEARCH_PARAMS, SET_SCORE, CONFIRM_SUCCESS, UPDATE_TOKEN, UPDATE_INFO, UPLOAD_URL, SET_BOOK_SHOW} from './actions';
-import { watchIndexRequest, watchSearchRequest, watchPersonalRequest, watchConfirmOrder, watchSetUrl, watchBookRequest, watchUserRequest, watchBuy, watchSave, watchModify, watchComment, watchGetComment} from './sagas'
+import { SET_LOGIN, SET_REGISTER, SLIDER_SHOW, SET_PRESENT, SET_BOOKON, SET_BOOKNOW, SET_USER, SET_LISTON, SET_SEARCH, GET_SEARCH_PARAMS, SET_SCORE, CONFIRM_SUCCESS, UPDATE_TOKEN, UPDATE_INFO, UPLOAD_URL, SET_BOOK_SHOW, UPLOAD_IMAGE, CANCEL_USER, SET_MODIFY} from './actions';
+import { watchIndexRequest, watchSearchRequest, watchPersonalRequest, watchConfirmOrder, watchSetUrl, watchBookRequest, watchUserRequest, watchBuy, watchSave, watchModify, watchComment, watchGetComment, watchSetInfo, watchSetIcon} from './sagas'
 import createSagaMiddleware from 'redux-saga'
+import {loadState} from './localStorage'
 
 const SagaMiddleware = createSagaMiddleware();
-const store = createStore(userState, 
+const store = createStore(userState,
+  loadState(), 
   compose(
     applyMiddleware(SagaMiddleware),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
@@ -24,6 +26,9 @@ SagaMiddleware.run(watchSave);
 SagaMiddleware.run(watchModify);
 SagaMiddleware.run(watchComment);
 SagaMiddleware.run(watchGetComment);
+SagaMiddleware.run(watchSetInfo);
+SagaMiddleware.run(watchSetIcon);
+
 
 //设置登录/注册状态
 export const mapDispatchToProps = (dispatch) =>({
@@ -35,12 +40,20 @@ export const mapDispatchToProps = (dispatch) =>({
     type: SET_REGISTER,
     register: register
   }),
-  indexRequest: () => dispatch({
-    type: 'INDEX_REQUEST'
+  onModify: (modify) => dispatch({
+    type: SET_MODIFY,
+    modify: modify
+  }),
+  indexRequest: (token) => dispatch({
+    type: 'INDEX_REQUEST',
+    token: token
   }),
   setUser: (user) => dispatch({
     type: SET_USER,
     user: user
+  }),
+  onCancel: () => dispatch({
+    type:CANCEL_USER
   })
 })
 //设置轮播图状态
@@ -83,6 +96,11 @@ export const Personal = () => ({
   updateInfo: (info) => dispatch({
     type: UPDATE_INFO,
     info: info
+  }),
+  setInfo: (info, token) => dispatch({
+    type: 'SET_INFO',
+    info: info,
+    token: token
   })
 })
 
@@ -97,6 +115,15 @@ export const setSearch = () => ({
     params: params
   })
 })
+
+//设置分类搜索的内容
+export const setSort = () => ({
+  getSearchParams: (params) => dispatch({
+    type: GET_SEARCH_PARAMS,
+    params: params
+  })
+})
+
 
 //搜索页面
 export const Search = () => ({
@@ -118,11 +145,12 @@ export const StarScore = () => ({
 
 //提交订单
 export const Order = () => ({
-   confirmOrder: (bookid, score, index) => dispatch({
+   confirmOrder: (bookid, score, index, token) => dispatch({
     type: 'CONFIRM_ORDER',
     bookid: bookid,
     score: score,
-    index: index
+    index: index,
+    token: token
   })
 })
 
@@ -141,9 +169,10 @@ export const UploadBook = () => ({
 
 //显示书籍
 export const Book = () => ({
-  bookRequest: (bookid) => dispatch({
+  bookRequest: (bookid, token) => dispatch({
     type: 'BOOK_REQUEST',
-    bookid: bookid
+    bookid: bookid,
+    token: token
   }),
   setBookShow: (src) => dispatch({
     type: SET_BOOK_SHOW,
@@ -159,17 +188,18 @@ export const Book = () => ({
     bookid: bookid,
     token: token
   }),
-  comment: (token, bookid, text, parent, time) => dispatch({
+  comment: (token, book_id, text, parent, time, page_num) => dispatch({
     type: 'COMMENT',
-    bookid: bookid,
+    book_id: book_id,
     token: token,
     text: text,
     parent: parent,
-    time: time
+    time: time,
+    page_num: page_num
   }),
-  getComments: (token, bookid, page_num, parent) => dispatch({
+  getComments: (token, book_id, page_num, parent) => dispatch({
     type:'GETCOMMENTS',
-    bookid: bookid,
+    book_id: book_id,
     token: token,
     page_num: page_num,
     parent, parent
@@ -179,14 +209,15 @@ export const Book = () => ({
 
 //显示用户
 export const User = () => ({
-  userRequest: (userid) => dispatch({
+  userRequest: (userid, token) => dispatch({
     type: 'USER_REQUEST',
-    userid: userid
+    userid: userid,
+    token: token
   })
 })
 
 //修改密码
-export const Login = () => ({
+export const Modify = () => ({
   modify: (token, old_password, new_password1, new_password2) => dispatch({
     type: 'MODIFY',
     token: token,
@@ -196,3 +227,15 @@ export const Login = () => ({
   })
 })
 
+//上传头像
+export const uploadImage = () => ({
+  uploadIcon: (image, token) => dispatch({
+    type: 'SET_ICON',
+    image: image,
+    token: token
+  }),
+  updateToken: (token) => dispatch({
+    type: UPDATE_TOKEN,
+    token: token
+  })
+})

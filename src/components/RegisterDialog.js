@@ -7,6 +7,7 @@ export class RegisterDialog extends React.Component{
     constructor(props){
       super(props);
       this.handleUserNameChange = this.handleUserNameChange.bind(this);
+      this.onSubmit = this.onSubmit.bind(this);
     }
 
     handleUserNameChange(e){
@@ -22,7 +23,7 @@ export class RegisterDialog extends React.Component{
         alert('请选择专业');
         return;
       }
-      axios.post('/users', {
+      axios.post('/bookshop/users', {
         username: document.getElementById('res_username').value,
         password1: document.getElementById('res_password_1').value,
         password2: document.getElementById('res_password_2').value,
@@ -32,20 +33,26 @@ export class RegisterDialog extends React.Component{
         grade: document.getElementById('res_grade').value,
         phone_num: document.getElementById('res_phonenum').value,
         wechat_id: document.getElementById('res_wechat').value,
-        qq: document.getElementById('qq').value,
+        qq: document.getElementById('res_qq').value,
       }).then((res) => {
-        if(res.data.error_code === 200){
-            this.props.setUser(res.data.data)
+        console.log(res)
+        if(res.status=== 201){
+            this.props.setUser(res.data)
+            window.location.reload();
+        }
+      }).catch((err) => {
+        if(err.response){
+          alert(err.response.data.message)
         }
         else{
-          alert(res.data.data.message)
+          alert(err.message)
         }
       })
       this.props.onRegister(false);
     }
 
     render(){
-      const majors = ["历史学", "学前教育", "英语", "翻译", "金融数学", "应用统计学", "生物工程", "地理科学", "新闻学", "传播学", "软件工程", "嵌入式", "数据库", "网络工程", "心理学", "思想政治教育", "社会工作", "设计学"]
+      const majors = ["历史学", "学前教育", "英语", "翻译", "金融数学", "应用统计学", "生物工程", "地理科学", "新闻学", "软件工程", "嵌入式", "数据库", "网络工程", "心理学", "思想政治教育", "社会工作", "设计学"]
       return(
         <div className = "dialog">
           <div className = "register_area" >
